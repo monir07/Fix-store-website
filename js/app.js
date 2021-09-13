@@ -77,7 +77,7 @@ const addToCart = (id, price) => {
   updateTotal();
 };
 
-// AUXILARY FUNCTION GET INPUT USING ID.
+// AUXILIARY FUNCTION GET INPUT USING ID.
 const getInputValue = (id) => {
   const element = document.getElementById(id).innerText;
   const converted = parseFloat(element);
