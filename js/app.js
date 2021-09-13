@@ -9,22 +9,64 @@ const loadProducts = () => {
 const showProducts = (products) => {
   const allProducts = products.map((pd) => pd);
   for (const product of allProducts) {
-    const image = product.images;
+    const image = product.image;
+    const description = product.description;
     const div = document.createElement("div");
     div.classList.add("product");
-    div.innerHTML = `<div class="single-product">
+    div.classList.add("shadow");
+    div.classList.add("m-2");
+    div.classList.add("rounded");
+    div.innerHTML = `<div class="single-product bg-white rounded">
       <div>
-    <img class="product-image" src=${image}></img>
+        <img class="product-image" src=${image}></img>
       </div>
-      <h3>${product.title}</h3>
+      <h5 class="p-2">${product.title}</h5>
       <p>Category: ${product.category}</p>
-      <h2>Price: $ ${product.price}</h2>
+
+      <!--porduct Rating Start from here -->
+      ${Math.floor(product.rating.rate) === 1 ?
+        "<span class='fa fa-star checked'></span>".repeat(1)
+        :
+        ""
+      }
+      ${Math.floor(product.rating.rate) === 2 ?
+        "<span class='fa fa-star checked'></span>".repeat(2)
+        :
+        ""
+      }
+      ${Math.floor(product.rating.rate) === 3 ?
+        "<span class='fa fa-star checked'></span>".repeat(3)
+        :
+        ""
+      }
+      ${Math.floor(product.rating.rate) === 4 ?
+        "<span class='fa fa-star checked'></span>".repeat(4)
+        :
+        ""
+      }
+      ${Math.floor(product.rating.rate) === 5 ?
+        "<span class='fa fa-star checked'></span>".repeat(5)
+        :
+        ""
+      }
+      <p> <span id="rate">${product.rating.rate}</span> average based on <span id="count">${product.rating.count}</span> reviews.</p>      
+      <h4>Price: $ ${product.price}</h4>
       <button onclick="addToCart(${product.id},${product.price})" id="addToCart-btn" class="buy-now btn btn-success">add to cart</button>
-      <button id="details-btn" class="btn btn-danger">Details</button></div>
+      <button onclick="showModal('${product.description}')" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Details</button>
+      </div>
       `;
     document.getElementById("all-products").appendChild(div);
   }
 };
+
+// ONCLICK DETAILS SHOW MODAL.
+const showModal = (description) => {
+  console.log(description);
+  document.getElementById("description").innerText = description;
+};
+
+
+// ONCLICK ADD CART, ITEM ADED TO CARD.
 let count = 0;
 const addToCart = (id, price) => {
   count = count + 1;
@@ -32,11 +74,13 @@ const addToCart = (id, price) => {
 
   updateTaxAndCharge();
   document.getElementById("total-Products").innerText = count;
+  updateTotal();
 };
 
+// AUXILARY FUNCTION GET INPUT USING ID.
 const getInputValue = (id) => {
   const element = document.getElementById(id).innerText;
-  const converted = parseInt(element);
+  const converted = parseFloat(element);
   return converted;
 };
 
@@ -45,12 +89,12 @@ const updatePrice = (id, value) => {
   const convertedOldPrice = getInputValue(id);
   const convertPrice = parseFloat(value);
   const total = convertedOldPrice + convertPrice;
-  document.getElementById(id).innerText = Math.round(total);
+  document.getElementById(id).innerText = total.toFixed(2);
 };
 
 // set innerText function
 const setInnerText = (id, value) => {
-  document.getElementById(id).innerText = Math.round(value);
+  document.getElementById(id).innerText = value.toFixed(2);
 };
 
 // update delivery charge and total Tax
@@ -75,6 +119,6 @@ const updateTotal = () => {
   const grandTotal =
     getInputValue("price") + getInputValue("delivery-charge") +
     getInputValue("total-tax");
-  document.getElementById("total").innerText = grandTotal;
+  document.getElementById("total").innerText = grandTotal.toFixed(2);
 };
 loadProducts();
